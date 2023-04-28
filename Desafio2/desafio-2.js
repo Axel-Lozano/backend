@@ -10,8 +10,45 @@ class ProductManager {
 
     addProduct = async (title, description, price, thumbnail,code, stock) => {
         try {
+            let validFile = fs.existsSync(this.path)
+            if(!validFile){
+                ProductManager.id++
 
-            ProductManager.id++
+
+                const product ={
+                    id: ProductManager.id++ ,
+                    title,
+                    description,
+                    price,
+                    thumbnail,
+                    code,
+                    stock
+                }
+                this.products.push(product)
+                return await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2));
+            }else{
+
+
+                let readFile = await fs.promises.readFile(this.path, 'utf-8')
+                this.products = JSON.parse(readFile)
+
+
+                const product ={
+                    id: this.products.length + 1 ,
+                    title,
+                    description,
+                    price,
+                    thumbnail,
+                    code,
+                    stock
+                }
+    
+                this.products.push(product)
+                console.log('producto agregado: ', product)
+                return await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2));
+            }
+
+        /*  ProductManager.id++
 
             const product ={
                 id: ProductManager.id ,
@@ -24,7 +61,7 @@ class ProductManager {
             }
 
             this.products.push(product)
-            await fs.promises.writeFile(this.path, JSON.stringify(this.products));
+            await fs.promises.writeFile(this.path, JSON.stringify(this.products));*/
         } catch (error) {
             console.log(error);
         }
@@ -68,13 +105,33 @@ class ProductManager {
         }
     }
 
-    updateProducts = async ({id, ...producto}) => {
+    /*updateProducts = async ({id, ...producto}) => {
         await this.deleteProductById(id);
         const productOld = await fs.promises.readFile(this.path, "utf-8");
         const productOldjs = JSON.parse(productOld);
         const productModif =[{ id, ...producto}, productOldjs]
         await fs.promises.writeFile(this.path, JSON.stringify(productModif));
+    }*/
+
+    updateProducts = async (id, producto) => {
+        try {
+            await this.deleteProductById(id);
+        const productOld = await fs.promises.readFile(this.path, "utf-8");
+        
+        const productOldjs = JSON.parse(productOld);
+
+
+        productOldjs.push({
+            id: id,
+            ...producto
+        })
+        
+        await fs.promises.writeFile(this.path, JSON.stringify(productOldjs, null, 2));
+        } catch (error) {
+            console.log(error);
+        }
     }
+
 }
 
 const productos = new ProductManager()
