@@ -31,7 +31,7 @@ export default class CartManager{
     async getCartsById(cid){
         try {
             const carts = await this.getAllCarts();
-            const cart = carts.find((car) => car.cid === cid);
+            const cart = carts.find((car) => car.id === cid);
             if (cart) {
                 return cart;
             }
@@ -56,21 +56,51 @@ export default class CartManager{
         }
     };
 
-    async savePruducttocart(cid, pid){
+    async saveCarts(carts) {
         try {
-            const cart = await this.getCartsById(cid);
-            if (cart) {
-                const prodExistant = await cart.products.find(p => p.pid === pid)
-                if (prodExistant) {
-                    prodExistant.quantity ++
-                }else{
-                    cart.products.push(pid)
-                }
-            }
+            await fs.promises.writeFile(this.path, JSON.stringify(carts));
         } catch (error) {
             console.log(error);
         }
     }
 
-    
+    async saveProductToCart(cid, pid) {
+        try {
+            const carts = await this.getAllCarts();
+            const cartIndex = carts.findIndex((c) => c.id === cid);
+            if (cartIndex >= 0) {
+                const cart = carts[cartIndex];
+                const prodIndex = cart.products.findIndex((p) => p.product === pid);
+                if (prodIndex >= 0) {
+                    cart.products[prodIndex].quantity++;
+                } else {
+                    cart.products.push({
+                        product: pid,
+                        quantity: 1
+                    });
+                }
+                await this.saveCarts(carts);
+                return cart;
+            } else {
+                throw new Error("Error: cart not found");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    // async savePruducttocart(cid, pid){
+    //     try {
+    //         const cart = await this.getCartsById(cid);
+    //         if (cart) {
+    //             const prodExistant = await cart.products.find(p => p.pid === pid)
+    //             if (prodExistant) {
+    //                 prodExistant.quantity ++
+    //             }else{
+    //                 cart.products.push(pid)
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 }
