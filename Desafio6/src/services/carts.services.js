@@ -20,11 +20,10 @@ export const getCartsByIdService = async (id) => {
     }
 };
 
-export const createCartService = async (obj) => {
+export const createCartService = async () => {
     try {
-        const newCart = await cartDao.createCart(obj);
-        if (!newCart) throw new Error('Validation Error!')
-        else return newCart;
+        const newCart = await cartDao.createCart();
+        return newCart;
     } catch (error) {
         console.log(error);
     }

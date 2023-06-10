@@ -7,7 +7,7 @@ const prodDao = new ProductsDaoMongoDB();
 
 export const getAllProductService = async () => {
     try {
-        const docs = await prodDao.getAllProduct();
+        const docs = await prodDao.getAllProducts();
         return docs;
     } catch (error) {
         console.log(error);
@@ -50,7 +50,7 @@ export const updateProductService = async (id, obj) => {
 
 export const deleteProductService = async (id) => {
     try {
-        const prodDel = await prodDao.deleteProduct(id);
+        const prodDel = await prodDao.deleteProductById(id);
         return prodDel;
     } catch (error) {
         console.log(error);
