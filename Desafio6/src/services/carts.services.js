@@ -3,7 +3,7 @@ const cartDao = new cartsDaoMongoDB();
 
 export const getAllcartService = async () => {
     try {
-        const allCart = await cartDao.getAllcarts();
+        const allCart = await cartDao.getAllCarts();
         return allCart;
     } catch (error) {
         console.log(error);
@@ -12,7 +12,7 @@ export const getAllcartService = async () => {
 
 export const getCartsByIdService = async (id) => {
     try {
-        const cartById = await cartDao.getcartsById(id);
+        const cartById = await cartDao.getCartsById(id);
         if (!cartById) throw new Error('Product not found')
         else return cartById;
     } catch (error) {

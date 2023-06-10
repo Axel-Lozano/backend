@@ -43,7 +43,7 @@ export const deleteProductToCartController = async (req, res, next) => {
     try {
         const { prodId, cartId } = req.params;
         const dellPTC = await deleteProductToCartService(prodId, cartId);
-        res.json({message: "Product deleted successfully!"},dellPTC);
+        res.json({message: "Product deleted successfully!"});
     } catch (error) {
         next(error);
     }
